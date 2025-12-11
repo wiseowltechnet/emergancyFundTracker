@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Fund Tracker - WiseOwlTech</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Emergency Fund Tracker</h1>
+            <p class="subtitle">Building financial security with WiseOwlTech</p>
+        </header>
+
+        <main>
+            <div class="thermometer-container">
+                <div class="thermometer">
+                    <div class="thermometer-bulb">
+                        <span class="current-amount">$0</span>
+                    </div>
+                    <div class="thermometer-tube">
+                        <div class="thermometer-fill" id="thermometer-fill"></div>
+                        <div class="goal-marker">
+                            <span class="goal-amount" id="goal-amount">$1,000</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-info">
+                    <div class="percentage" id="percentage">0%</div>
+                    <div class="remaining" id="remaining">$1,000 to go</div>
+                </div>
+            </div>
+
+            <div class="income-form">
+                <h2>Add Gig Income</h2>
+                <form id="income-form">
+                    <div class="form-group">
+                        <label for="amount">Amount ($)</label>
+                        <input type="number" id="amount" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="source">Income Source</label>
+                        <select id="source" required>
+                            <option value="">Select source</option>
+                            <option value="amazon-flex">Amazon Flex</option>
+                            <option value="doordash">DoorDash</option>
+                            <option value="roadie">Roadie</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <button type="submit">Add to Fund</button>
+                </form>
+            </div>
+
+            <div class="goal-setting">
+                <h2>Emergency Fund Goal</h2>
+                <div class="form-group">
+                    <label for="goal">Goal Amount ($)</label>
+                    <input type="number" id="goal" step="100" min="100" value="1000">
+                    <button id="update-goal">Update Goal</button>
+                </div>
+            </div>
+
+            <div class="recent-entries">
+                <h2>Recent Entries</h2>
+                <div id="entries-list"></div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
