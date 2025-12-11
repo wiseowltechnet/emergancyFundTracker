@@ -1,10 +1,69 @@
+class AuthManager {
+    constructor() {
+        this.currentUser = localStorage.getItem('currentUser');
+        this.users = JSON.parse(localStorage.getItem('users')) || {};
+    }
+
+    login(username, password) {
+        if (!this.users[username]) {
+            // Create new user
+            this.users[username] = { password: password };
+            localStorage.setItem('users', JSON.stringify(this.users));
+        } else if (this.users[username].password !== password) {
+            return false;
+        }
+        
+        this.currentUser = username;
+        localStorage.setItem('currentUser', username);
+        return true;
+    }
+
+    logout() {
+        this.currentUser = null;
+        localStorage.removeItem('currentUser');
+    }
+
+    isLoggedIn() {
+        return !!this.currentUser;
+    }
+
+    getCurrentUser() {
+        return this.currentUser;
+    }
+}
+
 class EmergencyFundTracker {
     constructor() {
-        this.currentAmount = parseFloat(localStorage.getItem('currentAmount')) || 0;
-        this.goal = parseFloat(localStorage.getItem('goal')) || 1000;
-        this.entries = JSON.parse(localStorage.getItem('entries')) || [];
+        this.auth = new AuthManager();
+        this.currentAmount = 0;
+        this.goal = 1000;
+        this.entries = [];
+        
+        if (this.auth.isLoggedIn()) {
+            this.loadUserData();
+            this.showApp();
+        } else {
+            this.showLogin();
+        }
         
         this.init();
+    }
+
+    loadUserData() {
+        const user = this.auth.getCurrentUser();
+        this.currentAmount = parseFloat(localStorage.getItem(`${user}_currentAmount`)) || 0;
+        this.goal = parseFloat(localStorage.getItem(`${user}_goal`)) || 1000;
+        this.entries = JSON.parse(localStorage.getItem(`${user}_entries`)) || [];
+    }
+
+    showLogin() {
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('app-container').style.display = 'none';
+    }
+
+    showApp() {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app-container').style.display = 'block';
     }
 
     init() {
@@ -14,6 +73,15 @@ class EmergencyFundTracker {
     }
 
     bindEvents() {
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleLogin();
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            this.handleLogout();
+        });
+
         document.getElementById('income-form').addEventListener('submit', (e) => {
             e.preventDefault();
             this.addIncome();
@@ -22,6 +90,27 @@ class EmergencyFundTracker {
         document.getElementById('update-goal').addEventListener('click', () => {
             this.updateGoal();
         });
+    }
+
+    handleLogin() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (this.auth.login(username, password)) {
+            this.loadUserData();
+            this.showApp();
+            this.updateDisplay();
+            this.renderEntries();
+        } else {
+            alert('Invalid password');
+        }
+    }
+
+    handleLogout() {
+        this.auth.logout();
+        this.showLogin();
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
     }
 
     addIncome() {
@@ -126,9 +215,10 @@ class EmergencyFundTracker {
     }
 
     saveData() {
-        localStorage.setItem('currentAmount', this.currentAmount.toString());
-        localStorage.setItem('goal', this.goal.toString());
-        localStorage.setItem('entries', JSON.stringify(this.entries));
+        const user = this.auth.getCurrentUser();
+        localStorage.setItem(`${user}_currentAmount`, this.currentAmount.toString());
+        localStorage.setItem(`${user}_goal`, this.goal.toString());
+        localStorage.setItem(`${user}_entries`, JSON.stringify(this.entries));
     }
 
     showSuccess(message) {

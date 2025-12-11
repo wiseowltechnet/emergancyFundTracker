@@ -11,10 +11,30 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 <body>
-    <div class="container">
+    <div class="login-screen" id="login-screen">
+        <div class="login-form">
+            <h1>Emergency Fund Tracker</h1>
+            <p class="subtitle">Building financial security with WiseOwlTech</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit">Login</button>
+                <p class="login-help">First time? Just enter any username/password to create account</p>
+            </form>
+        </div>
+    </div>
+
+    <div class="container" id="app-container" style="display: none;">
         <header>
             <h1>Emergency Fund Tracker</h1>
             <p class="subtitle">Building financial security with WiseOwlTech</p>
+            <button id="logout-btn" class="logout-btn">Logout</button>
         </header>
 
         <main>
