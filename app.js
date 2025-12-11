@@ -39,14 +39,21 @@ class EmergencyFundTracker {
         this.goal = 1000;
         this.entries = [];
         
+        this.bindEvents();
+        
         if (this.auth.isLoggedIn()) {
             this.loadUserData();
             this.showApp();
+            this.updateDisplay();
+            this.renderEntries();
         } else {
             this.showLogin();
         }
-        
-        this.init();
+    }
+
+    init() {
+        this.updateDisplay();
+        this.renderEntries();
     }
 
     loadUserData() {
@@ -64,12 +71,6 @@ class EmergencyFundTracker {
     showApp() {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('app-container').style.display = 'block';
-    }
-
-    init() {
-        this.updateDisplay();
-        this.bindEvents();
-        this.renderEntries();
     }
 
     bindEvents() {
@@ -99,8 +100,7 @@ class EmergencyFundTracker {
         if (this.auth.login(username, password)) {
             this.loadUserData();
             this.showApp();
-            this.updateDisplay();
-            this.renderEntries();
+            this.init();
         } else {
             alert('Invalid password');
         }
