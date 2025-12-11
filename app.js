@@ -34,20 +34,28 @@ class AuthManager {
 
 class EmergencyFundTracker {
     constructor() {
+        console.log('Initializing Emergency Fund Tracker...');
+        
         this.auth = new AuthManager();
         this.currentAmount = 0;
         this.goal = 1000;
         this.entries = [];
         
-        this.bindEvents();
-        
-        if (this.auth.isLoggedIn()) {
-            this.loadUserData();
-            this.showApp();
-            this.updateDisplay();
-            this.renderEntries();
-        } else {
-            this.showLogin();
+        try {
+            this.bindEvents();
+            
+            if (this.auth.isLoggedIn()) {
+                console.log('User already logged in:', this.auth.getCurrentUser());
+                this.loadUserData();
+                this.showApp();
+                this.updateDisplay();
+                this.renderEntries();
+            } else {
+                console.log('No user logged in, showing login screen');
+                this.showLogin();
+            }
+        } catch (error) {
+            console.error('Error initializing app:', error);
         }
     }
 
@@ -237,7 +245,7 @@ class EmergencyFundTracker {
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
-    new EmergencyFundTracker();
+    window.app = new EmergencyFundTracker();
 });
 
 // PWA Service Worker Registration
